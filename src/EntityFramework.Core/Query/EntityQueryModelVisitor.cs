@@ -51,6 +51,15 @@ namespace Microsoft.Data.Entity.Query
             _queryCompilationContext = queryCompilationContext;
         }
 
+        public IEnumerable<object> GetAnnotations(IQuerySource querySource)
+        {
+            return _queryAnnotations
+                .Where(annotation => annotation.QuerySource == querySource)
+                .Select(annotation => annotation.ResultOperator)
+                .OfType<AnnotateQueryResultOperator>()
+                .Select(resultOperator => resultOperator.Expression.Value);
+        }
+
         public virtual Expression Expression
         {
             get { return _expression; }
