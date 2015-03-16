@@ -85,9 +85,7 @@ namespace Microsoft.Data.Entity.Relational.Query.ExpressionTreeVisitors
                 ? tableName.First().ToString().ToLower()
                 : _querySource.ItemName;
 
-            var fromSqlAnnotations = QueryModelVisitor.GetAnnotations(_querySource)
-                .OfType<FromSqlAnnotation>()
-                .ToList();
+            var fromSqlAnnotations = QueryModelVisitor.GetAnnotations<FromSqlAnnotation>(_querySource).ToList();
 
             switch(fromSqlAnnotations.Count)
             {

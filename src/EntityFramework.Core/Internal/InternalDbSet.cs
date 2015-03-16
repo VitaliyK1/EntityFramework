@@ -143,8 +143,10 @@ namespace Microsoft.Data.Entity.Internal
 
         IServiceProvider IAccessor<IServiceProvider>.Service => ((IAccessor<IServiceProvider>)_context).Service;
 
-        DbSet<TEntity> IDbSetExtender<TEntity>.AnnotateQuery(object annotation)
+        DbSet<TEntity> IDbSetExtender<TEntity>.AnnotateQuery([NotNull] object annotation)
         {
+            Check.NotNull(annotation, nameof(annotation));
+
             return new InternalDbSet<TEntity>(_context, (EntityQueryable<TEntity>)_entityQueryable.Value.AnnotateQuery(annotation));
         }
     }

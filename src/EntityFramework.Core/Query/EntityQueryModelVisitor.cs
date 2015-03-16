@@ -51,13 +51,19 @@ namespace Microsoft.Data.Entity.Query
             _queryCompilationContext = queryCompilationContext;
         }
 
-        public IEnumerable<object> GetAnnotations(IQuerySource querySource)
+        public virtual IEnumerable<TAnnotation> GetAnnotations<TAnnotation>([NotNull] IQuerySource querySource)
         {
-            return _queryAnnotations
-                .Where(annotation => annotation.QuerySource == querySource)
-                .Select(annotation => annotation.ResultOperator)
-                .OfType<AnnotateQueryResultOperator>()
-                .Select(resultOperator => resultOperator.Expression.Value);
+            Check.NotNull(querySource, nameof(querySource));
+
+
+            return _queryAnnotations != null
+                ? _queryAnnotations
+                    .Where(annotation => annotation.QuerySource == querySource)
+                    .Select(annotation => annotation.ResultOperator)
+                    .OfType<AnnotateQueryResultOperator>()
+                    .Select(resultOperator => resultOperator.Expression.Value)
+                    .OfType<TAnnotation>()
+                : Enumerable.Empty<TAnnotation>();
         }
 
         public virtual Expression Expression

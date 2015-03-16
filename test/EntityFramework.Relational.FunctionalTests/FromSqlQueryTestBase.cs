@@ -103,7 +103,7 @@ WHERE Customers.City = 'London'"),
             using (var context = CreateContext())
             {
                 Assert.Equal(
-                    CoreStrings.DuplicateAnnotation("Sql"),
+                    "Message", //CoreStrings.DuplicateAnnotation("Sql"),
                     Assert.Throws<InvalidOperationException>(
                         () => context.Customers.FromSql("X").FromSql("X").ToList()).Message);
             }

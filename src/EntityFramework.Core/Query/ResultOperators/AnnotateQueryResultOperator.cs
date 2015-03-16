@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.Data.Entity.Internal;
 using Microsoft.Data.Entity.Utilities;
 using Remotion.Linq.Clauses;
+using Remotion.Linq.Clauses.ExpressionTreeVisitors;
 using Remotion.Linq.Clauses.ResultOperators;
 using Remotion.Linq.Clauses.StreamedData;
 
@@ -17,13 +18,20 @@ namespace Microsoft.Data.Entity.Query.ResultOperators
     {
         private readonly ConstantExpression _annotationExpression;
 
-        public ConstantExpression Expression => _annotationExpression;
-
-        public AnnotateQueryResultOperator(ConstantExpression annotationExpression)
+        public AnnotateQueryResultOperator([NotNull] ConstantExpression annotationExpression)
         {
             Check.NotNull(annotationExpression, nameof(annotationExpression));
 
             _annotationExpression = annotationExpression;
+        }
+
+        public virtual ConstantExpression Expression => _annotationExpression;
+
+        public override string ToString()
+        {
+            return "AnnotateQuery("
+                + FormattingExpressionTreeVisitor.Format(_annotationExpression)
+                + ")";
         }
 
         public override ResultOperatorBase Clone([NotNull] CloneContext cloneContext)
@@ -33,7 +41,7 @@ namespace Microsoft.Data.Entity.Query.ResultOperators
             return new AnnotateQueryResultOperator(_annotationExpression);
         }
 
-        public override void TransformExpressions(Func<Expression, Expression> transformation)
+        public override void TransformExpressions([NotNull] Func<Expression, Expression> transformation)
         {
         }
 
